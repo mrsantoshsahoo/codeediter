@@ -270,6 +270,11 @@ class AngularHandlePainter extends CustomPainter {
       ..style = PaintingStyle.stroke;
     Path path = getPath(size);
 
+
+    Path path2 = getPath2(size);
+    // Path path2 = Path();
+
+    // canvas.drawPath(path2, strokePaint2);
     canvas.drawPath(path, strokePaint);
     if (!hasShadow) return;
     canvas.drawPath(path, shadowPaint);
