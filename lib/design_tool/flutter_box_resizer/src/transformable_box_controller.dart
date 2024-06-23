@@ -223,6 +223,7 @@ class TransformableBoxController extends ChangeNotifier {
     Offset localPosition, {
     bool notify = true,
   }) {
+
     final UIMoveResult result = UIBoxTransform.move(
       initialRect: initialRect,
       initialLocalPosition: initialLocalPosition,
@@ -231,7 +232,7 @@ class TransformableBoxController extends ChangeNotifier {
     );
 
     _rect = result.rect;
-
+// print(initialRect);
     if (notify) notifyListeners();
 
     return result;

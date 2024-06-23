@@ -4,7 +4,7 @@ import 'package:codeediter/new_project.dart';
 import 'package:codeediter/template_screen.dart';
 import 'package:codeediter/utils/image_paths.dart';
 import 'package:device_frame/device_frame.dart';
-import 'package:device_preview/device_preview.dart';
+// import 'package:device_preview/device_preview.dart';
 import 'package:flutter/material.dart';
 
 enum Calendar { day, week, month, year }

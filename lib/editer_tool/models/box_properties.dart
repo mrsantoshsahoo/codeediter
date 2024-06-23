@@ -12,4 +12,9 @@ class BoxProperties {
 
   BoxProperties(this.width, this.height, this.isSelected, this.position,
       this.lineProperties, this.isHover);
+
+  @override
+  String toString() {
+    return 'BoxProperties{width: $width, height: $height, isSelected: $isSelected, isHover: $isHover, position: $position, lineProperties: $lineProperties}';
+  }
 }

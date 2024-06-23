@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import '../demo.dart';
 import '../design_tool/box_resizer/src/enums.dart';
 import '../design_tool/design_dashboard_screen.dart';
 import '../design_tool/flutter_box_resizer/src/handle_builders.dart';
@@ -64,9 +65,12 @@ class _MyRectangularBoxState extends State<MyRectangularBox> {
         Stack(
           children: [
 
-
+            // if (boxes.isNotEmpty)
+            //   CustomPaint(
+            //     size: const Size(1500, 1500), // Adjust the size as needed
+            //     painter: BoxConnectionPainter(boxes, boxes[0]),
+            //   ),
             for (var box in boxes)
-
               DraggableBox(
                 box: box,
                 onTap: () {

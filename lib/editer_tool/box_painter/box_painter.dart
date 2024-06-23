@@ -228,7 +228,6 @@ class BoxWithCornersPainter extends BoxPainter {
           ),
           handlePaintBorder,
         );
-
         // Draw the top-right corner handle
         canvas.drawRect(
           Rect.fromPoints(

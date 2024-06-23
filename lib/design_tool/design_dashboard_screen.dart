@@ -6,7 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_colorpicker/flutter_colorpicker.dart';
+// import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:popover/popover.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher_string.dart';
@@ -39,7 +39,7 @@ class DesignTool extends StatelessWidget {
       child: AdaptiveTheme(
         light: ThemeData(
           useMaterial3: true,
-          brightness: Brightness.light,
+          brightness: Brightness.dark,
           colorSchemeSeed: Colors.blue,
           inputDecorationTheme: InputDecorationTheme(
             isDense: true,
@@ -1070,34 +1070,34 @@ class _ControlPanelState extends State<ControlPanel> {
                             contentPadding: const EdgeInsets.all(0),
                             content: Column(
                               children: [
-                                ColorPicker(
-                                  pickerColor:
-                                      model.boxes[model.selectedBoxIndex].color,
-                                  onColorChanged: (v) {
-                                    setState(() {
-                                      // model.boxes[model.selectedBoxIndex].color=v;
-                                      model.changeColor(v);
-                                      // model.cColor=v;
-                                      // selectColor = v;
-                                      // print( model.cColor);
-                                    });
-                                  },
-                                  colorPickerWidth: 300,
-                                  pickerAreaHeightPercent: 0.7,
-                                  enableAlpha: true,
-                                  // hexInputController will respect it too.
-                                  displayThumbColor: true,
-                                  paletteType: PaletteType.hsvWithHue,
-                                  labelTypes: const [],
-                                  pickerAreaBorderRadius:
-                                      const BorderRadius.only(
-                                    topLeft: Radius.circular(2),
-                                    topRight: Radius.circular(2),
-                                  ),
-                                  hexInputController: textEditingController,
-                                  // <- here
-                                  portraitOnly: true,
-                                ),
+                                // ColorPicker(
+                                //   pickerColor:
+                                //       model.boxes[model.selectedBoxIndex].color,
+                                //   onColorChanged: (v) {
+                                //     setState(() {
+                                //       // model.boxes[model.selectedBoxIndex].color=v;
+                                //       model.changeColor(v);
+                                //       // model.cColor=v;
+                                //       // selectColor = v;
+                                //       // print( model.cColor);
+                                //     });
+                                //   },
+                                //   colorPickerWidth: 300,
+                                //   pickerAreaHeightPercent: 0.7,
+                                //   enableAlpha: true,
+                                //   // hexInputController will respect it too.
+                                //   displayThumbColor: true,
+                                //   paletteType: PaletteType.hsvWithHue,
+                                //   labelTypes: const [],
+                                //   pickerAreaBorderRadius:
+                                //       const BorderRadius.only(
+                                //     topLeft: Radius.circular(2),
+                                //     topRight: Radius.circular(2),
+                                //   ),
+                                //   hexInputController: textEditingController,
+                                //   // <- here
+                                //   portraitOnly: true,
+                                // ),
                                 Padding(
                                   padding:
                                       const EdgeInsets.fromLTRB(16, 0, 16, 16),
@@ -1116,9 +1116,9 @@ class _ControlPanelState extends State<ControlPanel> {
                                     autofocus: true,
                                     maxLength: 9,
                                     inputFormatters: [
-                                      UpperCaseTextFormatter(),
-                                      FilteringTextInputFormatter.allow(
-                                          RegExp(kValidHexPattern)),
+                                      // UpperCaseTextFormatter(),
+                                      // FilteringTextInputFormatter.allow(
+                                      //     RegExp(kValidHexPattern)),
                                     ],
                                   ),
                                 )

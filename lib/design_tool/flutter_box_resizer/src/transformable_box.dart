@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'dart:ui';
 
 import '../../box_resizer/box_transform.dart';
@@ -31,6 +32,7 @@ class TransformableBox extends StatefulWidget {
   ///
   /// Note that this will build for all four corners of the rectangle.
   final HandleBuilder cornerHandleBuilder;
+  final HandleBuilder cornerHandleBuilders;
 
   /// A builder function that is used to build the side handles of the
   /// [TransformableBox]. If you don't specify it, the default handles will be
@@ -230,6 +232,7 @@ class TransformableBox extends StatefulWidget {
     this.controller,
     this.cornerHandleBuilder = _defaultCornerHandleBuilder,
     this.sideHandleBuilder = _defaultSideHandleBuilder,
+    this.cornerHandleBuilders = _defaultCornerHandleBuilder,
     this.onTap,
     this.handleTapSize = 24,
     this.allowContentFlipping = true,
@@ -430,11 +433,13 @@ class _TransformableBoxState extends State<TransformableBox> {
     controller.onResizeStart(event.localPosition);
     widget.onResizeStart?.call(handle, event);
   }
-
+var angle=0.0;
   /// Called when the handle drag updates.
   void onHandlePanUpdate(DragUpdateDetails event, HandlePosition handle) {
     if (!isLegalGesture) return;
-
+    final x = event.localPosition.dx;
+    final y = event.localPosition.dy;
+     angle = -atan2(x, y);
     final UIResizeResult result = controller.onResizeUpdate(
       event.localPosition,
       handle,
@@ -514,6 +519,12 @@ class _TransformableBoxState extends State<TransformableBox> {
       event.localPosition,
     );
 // print(controller.initialLocalPosition);
+    final x = event.localPosition.dx;
+    final y = event.localPosition.dy;
+    final angle = -atan2(x, y);
+    // rotate=angle;
+
+    // print(angle);
     widget.onChanged?.call(result, event);
     widget.onDragUpdate?.call(result, event);
   }
@@ -534,9 +545,11 @@ class _TransformableBoxState extends State<TransformableBox> {
   }
 
   void onTap() {
-    print("object iner");
+    // print("object iner");
     widget.onTap?.call();
   }
+
+  double rotate = 0.0;
 
   @override
   Widget build(BuildContext context) {
@@ -557,15 +570,15 @@ class _TransformableBoxState extends State<TransformableBox> {
         onPanEnd: onDragPanEnd,
         onPanCancel: onDragPanCancel,
         onTap: onTap,
-        child: content,
+        child: GestureDetector(child: content),
       );
     }
 
 // print(widget.handleAlignment.offset(widget.handleTapSize));
-//     print(widget.handleTapSize);
+//     print(widget.rect);
     return Positioned.fromRect(
       rect: rect.inflate(widget.handleAlignment.offset(widget.handleTapSize)),
-      child:  Transform.rotate(
+      child: Transform.rotate(
         angle: 0.0,
         child: Stack(
           clipBehavior: Clip.none,
@@ -610,7 +623,33 @@ class _TransformableBoxState extends State<TransformableBox> {
                   onPanCancel: () => onHandlePanCancel(handle),
                   builder: widget.sideHandleBuilder,
                 ),
-
+            ///
+            // for (final handle in HandlePosition.corners.where((handle) =>
+            //     widget.visibleHandles.contains(handle) ||
+            //     widget.enabledHandles.contains(handle)))
+            //   Positioned(
+            //       left: handle.influencesLeft ? -20 : null,
+            //       right: handle.influencesRight ? -20 : null,
+            //       top: handle.influencesTop ? -20 : null,
+            //       bottom: handle.influencesBottom ? -20 : null,
+            //       width: widget.handleTapSize,
+            //       height: widget.handleTapSize,
+            //       child: GestureDetector(
+            //           onTap: () {
+            //             print("king");
+            //           },
+            //           behavior: HitTestBehavior.opaque,
+            //           onPanStart: (event) => onHandlePanStart(event, handle),
+            //           onPanUpdate: (event) => onHandlePanUpdate(event, handle),
+            //           onPanEnd: (event) => onHandlePanEnd(event, handle),
+            //           onPanCancel: () => onHandlePanCancel(handle),
+            //           child: const MouseRegion(
+            //             cursor: SystemMouseCursors.precise,
+            //             child: Icon(
+            //               Icons.rotate_90_degrees_cw_rounded,
+            //               color: Colors.red,
+            //             ),
+            //           ))),
           ],
         ),
       ),

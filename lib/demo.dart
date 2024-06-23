@@ -11,6 +11,8 @@ import 'design_tool/flutter_box_resizer/src/transformable_box.dart';
 import 'design_tool/resources/images.dart';
 import 'package:flutter/rendering.dart';
 
+import 'new prod/new_resizer.dart';
+
 class MyRectangularBoxs extends StatefulWidget {
   @override
   _MyRectangularBoxState createState() => _MyRectangularBoxState();
@@ -24,107 +26,290 @@ class _MyRectangularBoxState extends State<MyRectangularBoxs> {
   bool isCreateBox = false;
   Offset position = Offset(0, 0);
   bool isDragging = true;
+  List<Rect> containers = [];
+  Rect? currentContainer;
 
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
-    return Scaffold(
-      body: SizedBox(
-          child:  Stack(
+    return  GestureDetector(
+      onPanStart: (details) {
+        setState(() {
+          currentContainer =
+              Rect.fromPoints(details.localPosition, details.localPosition);
+        });
+      },
+      onPanUpdate: (details) {
+        setState(() {
+          if (currentContainer != null) {
+            currentContainer = Rect.fromPoints(
+                currentContainer!.topLeft, details.localPosition);
+          }
+        });
+      },
+      onPanEnd: (details) {
+        setState(() {
+          if (currentContainer != null) {
+
+            boxes.add(BoxData(
+              name: 'Box 2',
+              imageAsset: Images.image1,
+              rect: currentContainer!,
+              flip: Flip.none,
+              rotateValue: 0.5,
+              constraintsEnabled: true,
+            ));
+            // containers.add(currentContainer!);
+            currentContainer = null;
+          }
+        });
+      },
+      child: Stack(
         children: [
-            if (boxes.isNotEmpty)
-              CustomPaint(
-                size: const Size(1500, 1500), // Adjust the size as needed
-                painter: BoxConnectionPainter(boxes, boxes[0]),
+          Container(height: double.infinity,width: double.infinity,color: Colors.white10,),
+
+          if (boxes.isNotEmpty)
+            CustomPaint(
+              size: const Size(1500, 1500), // Adjust the size as needed
+              painter: BoxConnectionPainter(boxes, boxes[0]),
+            ),
+          for (var box in boxes)
+            TransformableBox(
+              rect: box.rect,
+              flip: box.flip,
+              onTap: () {},
+              onDragUpdate: (v, c) {
+                // print(v.rect);
+                box.rect = v.rect;
+                setState(() {});
+              },
+              onResizeUpdate: (d, c) {
+                box.rect = d.rect;
+                setState(() {});
+              },
+              onDragEnd: (d) {
+                setState(() {});
+              },
+              cornerHandleBuilder: (context, handle) => AngularHandle(
+                handle: handle,
+                color: Colors.blue,
+                hasShadow: false,
               ),
-            for (var box in boxes)
-              Transform.rotate(
-                angle: 0.0,
-                child: Stack(
-                  children: [
-                    TransformableBox(
-                      rect: box.rect,
-                      flip: box.flip,
-                      onTap: () {},
-                      onDragUpdate: (v, c) {
-                        print(v.rect);
-                        box.rect = v.rect;
-                        setState(() {});
-                      },
-                      onResizeUpdate: (d, c) {
-                        box.rect = d.rect;
-                        setState(() {});
-                      },
-                      onDragEnd: (d) {
-                        setState(() {});
-                      },
-                      cornerHandleBuilder: (context, handle) => AngularHandle(
-                        handle: handle,
-                        color: Colors.red,
-                        hasShadow: false,
-                      ),
-                      sideHandleBuilder: (context, handle) => AngularHandle(
-                        handle: handle,
-                        color: Colors.red,
-                        hasShadow: false,
-                      ),
-                      contentBuilder: (context, rect, flip) => GestureDetector(
-                        behavior: HitTestBehavior.translucent,
-                        onTap: () {
-                          setState(() {});
-                        },
-                        child:
-                        CustomPaint(
-                          painter: RectangularPainter(
-                              height: rect.height,
-                              width: rect.width,
-                              bottomLeftRadius: 0,
-                              bottomRightRadius: 0,
-                              topLeftRadius: 0,
-                              topRightRadius: 0,
-                              // rotation: 0.0,
-                              // numVertices: 3,
-                              // rotationAngle: 15,
-                              color: Colors.white24),
-                        ),
-                        // Container(
-                        //   width: rect.width,
-                        //   height: rect.height,
-                        //   decoration: BoxDecoration(
-                        //     color: Colors.white24,
-                        //   ),
-                        // ),
+              cornerHandleBuilders: (context, handle) => AngularHandle(
+                handle: handle,
+                color: Colors.red,
+                hasShadow: false,
+              ),
+              sideHandleBuilder: (context, handle) => AngularHandle(
+                handle: handle,
+                color: Colors.red,
+                hasShadow: false,
+              ),
+              contentBuilder: (context, rect, flip) => Stack(
+                alignment: Alignment.center,
+                children: [
+
+                  GestureDetector(
+                    behavior: HitTestBehavior.translucent,
+                    onTap: () {
+                      setState(() {});
+                    },
+                    child:
+                    // CustomPaint(
+                    //   painter: RectangularPainter(
+                    //       height: rect.height,
+                    //       width: rect.width,
+                    //       bottomLeftRadius: 0,
+                    //       bottomRightRadius: 0,
+                    //       topLeftRadius: 0,
+                    //       topRightRadius: 0,
+                    //       // rotation: 0.0,
+                    //       // numVertices: 3,
+                    //       // rotationAngle: 15,
+                    //       color: Colors.white24),
+                    // ),
+                    Container(
+                      width: rect.width,
+                      height: rect.height,
+                      decoration: BoxDecoration(
+                        color: Colors.white24,
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
+            ),
+
+          TransformableBox(
+            rect:currentContainer,
+            flip: Flip.none,
+            onTap: () {},
+            onDragUpdate: (v, c) {
+              // print(v.rect);
+              currentContainer = v.rect;
+              setState(() {});
+            },
+            onResizeUpdate: (d, c) {
+              currentContainer = d.rect;
+              setState(() {});
+            },
+            onDragEnd: (d) {
+              setState(() {});
+            },
+            cornerHandleBuilder: (context, handle) => AngularHandle(
+              handle: handle,
+              color: Colors.blue,
+              hasShadow: false,
+            ),
+            cornerHandleBuilders: (context, handle) => AngularHandle(
+              handle: handle,
+              color: Colors.red,
+              hasShadow: false,
+            ),
+            sideHandleBuilder: (context, handle) => AngularHandle(
+              handle: handle,
+              color: Colors.red,
+              hasShadow: false,
+            ),
+            contentBuilder: (context, rect, flip) => Stack(
+              alignment: Alignment.center,
+              children: [
+                GestureDetector(
+                  behavior: HitTestBehavior.translucent,
+                  onTap: () {
+                    setState(() {});
+                  },
+                  child: CustomPaint(
+                    painter: RectangularPainter(
+                        height: rect.height,
+                        width: rect.width,
+                        bottomLeftRadius: 0,
+                        bottomRightRadius: 0,
+                        topLeftRadius: 0,
+                        topRightRadius: 0,
+                        // rotation: 0.0,
+                        // numVertices: 3,
+                        // rotationAngle: 15,
+                        color: Colors.white24),
+                  ),
+                  // Container(
+                  //   width: rect.width,
+                  //   height: rect.height,
+                  //   decoration: BoxDecoration(
+                  //     color: Colors.white24,
+                  //   ),
+                  // ),
+                ),
+              ],
+            ),
+          ),
+          // CustomPaint(
+          //   size: const Size(double.infinity, double.infinity),
+          //   painter: ContainerPainter(currentContainer),
+          // ),
         ],
       ),
-          ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          setState(
-            () {
-              boxes.add(BoxData(
-                name: 'Box 2',
-                imageAsset: Images.image1,
-                rect: Rect.fromLTWH(
-                  (1000 - kInitialWidth) / 2,
-                  (1000 - kInitialHeight) / 2,
-                  150,
-                  150,
-                ),
-                flip: Flip.none,
-                rotateValue: 0.5,
-                constraintsEnabled: true,
-              ));
-            },
-          );
-        },
-        child: Icon(Icons.add),
-      ),
     );
+    //   Scaffold(
+    //   body: SizedBox(
+    //     child: Stack(
+    //       children: [
+    //         if (boxes.isNotEmpty)
+    //           CustomPaint(
+    //             size: const Size(1500, 1500), // Adjust the size as needed
+    //             painter: BoxConnectionPainter(boxes, boxes[0]),
+    //           ),
+    //         for (var box in boxes)
+    //
+    //           TransformableBox(
+    //             rect: box.rect,
+    //             flip: box.flip,
+    //             onTap: () {},
+    //             onDragUpdate: (v, c) {
+    //               // print(v.rect);
+    //               box.rect = v.rect;
+    //               setState(() {});
+    //             },
+    //             onResizeUpdate: (d, c) {
+    //               box.rect = d.rect;
+    //               setState(() {});
+    //             },
+    //             onDragEnd: (d) {
+    //               setState(() {});
+    //             },
+    //             cornerHandleBuilder: (context, handle) => AngularHandle(
+    //               handle: handle,
+    //               color: Colors.blue,
+    //               hasShadow: false,
+    //             ),
+    //             cornerHandleBuilders: (context, handle) => AngularHandle(
+    //               handle: handle,
+    //               color: Colors.red,
+    //               hasShadow: false,
+    //             ),
+    //             sideHandleBuilder: (context, handle) => AngularHandle(
+    //               handle: handle,
+    //               color: Colors.red,
+    //               hasShadow: false,
+    //             ),
+    //             contentBuilder: (context, rect, flip) => Stack(
+    //               alignment: Alignment.center,
+    //               children: [
+    //                 GestureDetector(
+    //                   behavior: HitTestBehavior.translucent,
+    //                   onTap: () {
+    //                     setState(() {});
+    //                   },
+    //                   child: CustomPaint(
+    //                     painter: RectangularPainter(
+    //                         height: rect.height,
+    //                         width: rect.width,
+    //                         bottomLeftRadius: 0,
+    //                         bottomRightRadius: 0,
+    //                         topLeftRadius: 0,
+    //                         topRightRadius: 0,
+    //                         // rotation: 0.0,
+    //                         // numVertices: 3,
+    //                         // rotationAngle: 15,
+    //                         color: Colors.white24),
+    //                   ),
+    //                   // Container(
+    //                   //   width: rect.width,
+    //                   //   height: rect.height,
+    //                   //   decoration: BoxDecoration(
+    //                   //     color: Colors.white24,
+    //                   //   ),
+    //                   // ),
+    //                 ),
+    //               ],
+    //             ),
+    //           ),
+    //       ],
+    //     ),
+    //   ),
+    //   floatingActionButton: FloatingActionButton(
+    //     onPressed: () {
+    //       setState(
+    //         () {
+    //           boxes.add(BoxData(
+    //             name: 'Box 2',
+    //             imageAsset: Images.image1,
+    //             rect: Rect.fromLTWH(
+    //               (1000 - kInitialWidth) / 2,
+    //               (1000 - kInitialHeight) / 2,
+    //               150,
+    //               150,
+    //             ),
+    //             flip: Flip.none,
+    //             rotateValue: 0.5,
+    //             constraintsEnabled: true,
+    //           ));
+    //         },
+    //       );
+    //     },
+    //     child: Icon(Icons.add),
+    //   ),
+    // );
   }
 }
 
@@ -443,7 +628,6 @@ class BoxConnectionPainter extends CustomPainter {
   }
 }
 
-
 class RectangularPainter extends CustomPainter {
   final Paint _paint;
   final double width;
@@ -465,8 +649,8 @@ class RectangularPainter extends CustomPainter {
     this.rotation = 0,
     this.color = Colors.blue,
   }) : _paint = Paint()
-    ..color = color
-    ..style = PaintingStyle.fill;
+          ..color = color
+          ..style = PaintingStyle.fill;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -545,8 +729,8 @@ class StarPainter extends CustomPainter {
     required this.height,
     Color color = Colors.yellow,
   }) : _paint = Paint()
-    ..color = color
-    ..style = PaintingStyle.fill;
+          ..color = color
+          ..style = PaintingStyle.fill;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -602,8 +786,8 @@ class StretchablePolygonPainter extends CustomPainter {
     required this.numVertices,
     Color color = Colors.yellow,
   }) : _paint = Paint()
-    ..color = color
-    ..style = PaintingStyle.fill;
+          ..color = color
+          ..style = PaintingStyle.fill;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -631,10 +815,6 @@ class StretchablePolygonPainter extends CustomPainter {
     return false;
   }
 }
-
-
-
-
 
 // GestureDetector(
 //     onPanStart: (d) {

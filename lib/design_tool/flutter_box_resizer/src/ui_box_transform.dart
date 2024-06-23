@@ -43,10 +43,12 @@ class UIBoxTransform {
     required ui.Offset localPosition,
     ui.Rect clampingRect = ui.Rect.largest,
   }) =>
+
       transform.BoxTransformer.move(
         initialRect: initialRect.toBox(),
         initialLocalPosition: initialLocalPosition.toVector2(),
         localPosition: localPosition.toVector2(),
         clampingRect: clampingRect.toBox(),
       ).toUI();
+
 }

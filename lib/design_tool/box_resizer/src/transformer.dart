@@ -33,6 +33,31 @@ class BoxTransformer {
     final Vector2 clampedDelta = clampedRect.topLeft - initialRect.topLeft;
 
     final Box newRect = initialRect.translate(clampedDelta.x, clampedDelta.y);
+    // final Box newRect = Box.fromLTRB(306.7, 173.2, 540.6, 442.2);
+    // print(newRect);
+
+    return MoveResult(
+      rect: newRect,
+      oldRect: initialRect,
+      delta: delta,
+      rawSize: newRect.size,
+      largestRect: clampingRect,
+    );
+  }
+
+  static RawMoveResult rotate({
+    required Box initialRect,
+    required Vector2 initialLocalPosition,
+    required Vector2 localPosition,
+    Box clampingRect = Box.largest,
+  }) {
+    final Vector2 delta = localPosition - initialLocalPosition;
+
+    final Box unclampedRect = initialRect.translate(delta.x, delta.y);
+    final Box clampedRect = clampingRect.containOther(unclampedRect);
+    final Vector2 clampedDelta = clampedRect.topLeft - initialRect.topLeft;
+
+    final Box newRect = initialRect.translate(clampedDelta.x, clampedDelta.y);
 
     return MoveResult(
       rect: newRect,

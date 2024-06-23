@@ -191,7 +191,8 @@ class AngularHandle extends StatelessWidget {
             maxWidth: handle.isHorizontal ? thickness : length,
             maxHeight: handle.isHorizontal ? length : thickness,
           ),
-          child: CustomPaint(
+          child:
+          CustomPaint(
             painter: AngularHandlePainter(
               color: color ?? Theme.of(context).colorScheme.primary,
               thickness: thickness,
@@ -262,22 +263,85 @@ class AngularHandlePainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
+    // final left = currentContainer?.left ?? 0;
+    // final top = currentContainer?.top ?? 0;
+    // final right = currentContainer?.right ?? 0;
+    // final bottom = currentContainer?.bottom ?? 0;
+    const cornerHandleSize = 4.0;
     var strokePaint2 = Paint()
       ..color = color
       ..strokeWidth = 1
       ..strokeJoin = StrokeJoin.miter
       ..strokeCap = StrokeCap.round
       ..style = PaintingStyle.stroke;
+
     Path path = getPath(size);
 
-
-    Path path2 = getPath2(size);
-    // Path path2 = Path();
-
-    // canvas.drawPath(path2, strokePaint2);
     canvas.drawPath(path, strokePaint);
     if (!hasShadow) return;
     canvas.drawPath(path, shadowPaint);
+    // // Draw the top-left corner handle
+    // canvas.drawRect(
+    //   Rect.fromPoints(
+    //     Offset(left - cornerHandleSize, top - cornerHandleSize),
+    //     Offset(left + cornerHandleSize, top + cornerHandleSize),
+    //   ),
+    //   handlePaint,
+    // );
+    // canvas.drawRect(
+    //   Rect.fromPoints(
+    //     Offset(left - cornerHandleSize, top - cornerHandleSize),
+    //     Offset(left + cornerHandleSize, top + cornerHandleSize),
+    //   ),
+    //   handlePaintBorder,
+    // );
+    // // Draw the top-right corner handle
+    // canvas.drawRect(
+    //   Rect.fromPoints(
+    //     Offset(right - cornerHandleSize, top - cornerHandleSize),
+    //     Offset(right + cornerHandleSize, top + cornerHandleSize),
+    //   ),
+    //   handlePaint,
+    // );
+    // canvas.drawRect(
+    //   Rect.fromPoints(
+    //     Offset(right - cornerHandleSize, top - cornerHandleSize),
+    //     Offset(right + cornerHandleSize, top + cornerHandleSize),
+    //   ),
+    //   handlePaintBorder,
+    // );
+    //
+    // // Draw the bottom-left corner handle
+    // canvas.drawRect(
+    //   Rect.fromPoints(
+    //     Offset(left - cornerHandleSize, bottom - cornerHandleSize),
+    //     Offset(left + cornerHandleSize, bottom + cornerHandleSize),
+    //   ),
+    //   handlePaint,
+    // );
+    // canvas.drawRect(
+    //   Rect.fromPoints(
+    //     Offset(left - cornerHandleSize, bottom - cornerHandleSize),
+    //     Offset(left + cornerHandleSize, bottom + cornerHandleSize),
+    //   ),
+    //   handlePaintBorder,
+    // );
+    //
+    // // Draw the bottom-right corner handle
+    // canvas.drawRect(
+    //   Rect.fromPoints(
+    //     Offset(right - cornerHandleSize, bottom - cornerHandleSize),
+    //     Offset(right + cornerHandleSize, bottom + cornerHandleSize),
+    //   ),
+    //   handlePaint,
+    // );
+    // canvas.drawRect(
+    //   Rect.fromPoints(
+    //     Offset(right - cornerHandleSize, bottom - cornerHandleSize),
+    //     Offset(right + cornerHandleSize, bottom + cornerHandleSize),
+    //   ),
+    //   handlePaintBorder,
+    // );
   }
 
   /// Creates path for the handle based on the handle position.
@@ -328,48 +392,6 @@ class AngularHandlePainter extends CustomPainter {
     return path;
   }
 
-  /// Creates path for the handle based on the handle position.
-  Path getPath2(Size size) {
-    final double length = this.length - thickness;
-    final origin = getCenter(size, handle, handleAlign, thickness);
-
-    Path path = Path()..moveTo(origin.dx, origin.dy);
-
-    if (handle == HandlePosition.topLeft) {
-      path
-        ..relativeMoveTo(0, -1000)
-        ..relativeLineTo(0, 1000 * 2);
-    } else if (handle == HandlePosition.topRight) {
-      path
-        ..relativeMoveTo(-1000, 0)
-        ..relativeLineTo(1000 * 2, 0);
-    } else if (handle == HandlePosition.bottomLeft) {
-      path
-        ..relativeMoveTo(-10000, size.height)
-        ..relativeLineTo(10000 * 2, 0);
-    } else if (handle == HandlePosition.bottomRight) {
-      path
-        ..relativeMoveTo(size.height, -1000)
-        ..relativeLineTo(0, 1000 * 2);
-    } else if (handle == HandlePosition.right) {
-      path
-        ..relativeMoveTo(-1000, 0)
-        ..relativeLineTo(1000*2, 0);
-    } else if (handle == HandlePosition.left) {
-      path
-        ..relativeMoveTo(0, -1000)
-        ..relativeLineTo(0, 1000*2);
-    } else if (handle == HandlePosition.top) {
-      path
-        ..relativeMoveTo(0, -1000)
-        ..relativeLineTo(0, 1000*2);
-    } else if (handle == HandlePosition.bottom) {
-      path
-        ..relativeMoveTo(-1000, 0)
-        ..relativeLineTo(1000*2, 0);
-    }
-    return path;
-  }
 
   /// Gets the center point for given [handle] and [handleAlign] with given [size].
   Offset getCenter(

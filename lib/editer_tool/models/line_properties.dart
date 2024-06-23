@@ -26,4 +26,9 @@ class LineProperties {
     this.isCenterX = false,
     this.isCenterY = false,
   });
+
+  @override
+  String toString() {
+    return 'LineProperties{top: $top, left: $left, button: $button, right: $right, centerX: $centerX, centerY: $centerY, isTop: $isTop, isLeft: $isLeft, isButton: $isButton, isRight: $isRight, isCenterX: $isCenterX, isCenterY: $isCenterY}';
+  }
 }

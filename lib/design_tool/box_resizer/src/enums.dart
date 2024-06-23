@@ -251,6 +251,8 @@ enum Flip {
   /// The values itself are not used, only their sign is used to determine
   /// the flip state.
   factory Flip.fromValue(num horizontal, num vertical) {
+    print("horizontal ${horizontal}");
+    print("vertical ${vertical}");
     if (horizontal.isNegative && vertical.isNegative) {
       return Flip.diagonal;
     } else if (horizontal.isNegative) {
